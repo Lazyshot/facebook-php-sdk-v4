@@ -99,6 +99,19 @@ class FacebookRequestTest extends \PHPUnit_Framework_TestCase
         ], $params);
     }
 
+    public function testOptionalAppSecretProof()
+    {
+        $app = new FacebookApp('123', 'foo_secret');
+        $request = new FacebookRequest($app, 'foo_token', 'POST', '/foo', ['foo' => 'bar'], null, null, false);
+
+        $params = $request->getParams();
+
+        $this->assertEquals([
+            'foo' => 'bar',
+            'access_token' => 'foo_token',
+        ], $params);
+    }
+
     public function testAnAccessTokenCanBeSetFromTheParams()
     {
         $app = new FacebookApp('123', 'foo_secret');

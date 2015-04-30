@@ -84,6 +84,11 @@ class FacebookRequest
     protected $graphVersion;
 
     /**
+     * @var bool|null Use app secret proof
+     */
+    protected $useAppSecretProof;
+
+    /**
      * Creates a new Request entity.
      *
      * @param FacebookApp|null        $app
@@ -93,8 +98,9 @@ class FacebookRequest
      * @param array|null              $params
      * @param string|null             $eTag
      * @param string|null             $graphVersion
+     * @param bool|null               $useAppSecretProof
      */
-    public function __construct(FacebookApp $app = null, $accessToken = null, $method = null, $endpoint = null, array $params = [], $eTag = null, $graphVersion = null)
+    public function __construct(FacebookApp $app = null, $accessToken = null, $method = null, $endpoint = null, array $params = [], $eTag = null, $graphVersion = null, $useAppSecretProof = true)
     {
         $this->setApp($app);
         $this->setAccessToken($accessToken);
@@ -103,6 +109,7 @@ class FacebookRequest
         $this->setParams($params);
         $this->setETag($eTag);
         $this->graphVersion = $graphVersion ?: Facebook::DEFAULT_GRAPH_VERSION;
+        $this->useAppSecretProof = $useAppSecretProof;
     }
 
     /**
@@ -469,7 +476,8 @@ class FacebookRequest
         $accessToken = $this->getAccessToken();
         if ($accessToken) {
             $params['access_token'] = $accessToken;
-            $params['appsecret_proof'] = $this->getAppSecretProof();
+            if ($this->useAppSecretProof)
+                $params['appsecret_proof'] = $this->getAppSecretProof();
         }
 
         return $params;

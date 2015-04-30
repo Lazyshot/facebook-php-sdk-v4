@@ -120,6 +120,11 @@ class Facebook
     protected $lastResponse;
 
     /**
+     * @var bool|null Determines if requests should use appsecret_proof security.
+     */
+    protected $useAppSecretProof;
+
+    /**
      * Instantiates a new Facebook super-class object.
      *
      * @param array $config
@@ -155,7 +160,9 @@ class Facebook
             }
         }
 
+        $this->useAppSecretProof = isset($config['use_app_secret_proof'])  && $config['use_app_secret_proof'] === true;
         $enableBeta = isset($config['enable_beta_mode']) && $config['enable_beta_mode'] === true;
+
         $this->client = new FacebookClient($httpClientHandler, $enableBeta);
 
         if (isset($config['url_detection_handler'])) {
@@ -554,7 +561,8 @@ class Facebook
             $endpoint,
             $params,
             $eTag,
-            $graphVersion
+            $graphVersion,
+            $this->useAppSecretProof
         );
     }
 
